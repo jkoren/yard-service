@@ -1,24 +1,50 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## YARD SERVICE
 
-Things you may want to cover:
+Yard Service is a responsive web application to help residents understand the collection service provided by their city or town, adjusting for seasons and holidays, simplifying the combination of maps and calendars provided previously.
 
-* Ruby version
+# ![city-calendar](app/assets/images/city-calendar.png)
+# ![city-map](app/assets/images/city-map.png)
 
-* System dependencies
+## Developer
+- Jeff Korenstein
 
-* Configuration
+## Built with
+- [Ruby on Rails](https://guides.rubyonrails.org/v5.2/)
+- [React.js](https://reactjs.org/docs/getting-started.html)
+- [PostgreSQL](https://www.postgresql.org/docs/13/index.html)
+- [Foundation](https://get.foundation/)
 
-* Database creation
+## Run Locally
+The setup steps expect the following tools/versions:
+- Ruby 2.7.1
+- Rails 5.2.3
+- PostgreSQL 13
 
-* Database initialization
+###### Clone the Repo
+```
+git clone 
+```
+###### Install Dependencies
+```
+yarn install 
+bundle install 
+```
 
-* How to run the test suite
+###### Create and seed the database
+```
+bundle exec rake db: migrate
+bundle exec rake db: seed
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+###### Run the test suite
+```
+bundle exec rspec
+```
+###### Start the Rails server and webpack-dev-server
+```
+bundle exec rails s
+yarn run start
+```
 
-* Deployment instructions
-
-* ...
+###### The application can be accessed locally at <http://localhost:3000>
