@@ -3,8 +3,8 @@
 
 Yard Service is a responsive web application to help residents understand the collection service provided by their city or town, adjusting for seasons and holidays, simplifying the combination of maps and calendars provided previously.
 
-# ![city-calendar](app/assets/images/city-calendar.png)
-# ![city-map](app/assets/images/city-map.png)
+# ![city-calendar](app/assets/images/calendar.png)
+# ![city-map](app/assets/images/map.png)
 
 ## Developer
 - Jeff Korenstein
