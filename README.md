@@ -19,7 +19,7 @@ Yard Service is a responsive web application to help residents understand the co
 The setup steps expect the following tools/versions:
 - Ruby 2.7.1
 - Rails 5.2.3
-- PostgreSQL 13
+- PostgreSQL 13  
 
 ###### Clone the Repo
 ```
