@@ -6,6 +6,9 @@ Yard Service is a responsive web application to help residents understand the co
 # ![city-calendar](app/assets/images/calendar.png)
 # ![city-map](app/assets/images/map.png)
 
+## Entity Relationship Diagram
+# ![entity-relationship-diagram](app/assets/images/ER-Diagram-Yard-Waste-Day.png)
+
 ## Developer
 - Jeff Korenstein
 
