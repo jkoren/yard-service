@@ -75,6 +75,6 @@ addresses.each { |address|
   previous_address = address
 }    
 
-formatted_address_count = addresses.count.to_s.reverse.scan(/.{1,3}/).join(',').reverse
-puts formatted_address_count+ " addresses processed into "+zones.count+" zones."
 binding.pry #look at errors
+#formatted_address_count = addresses.count.to_s.reverse.scan(/.{1,3}/).join(',').reverse
+puts addresses.count+ " addresses processed into "+zones.count+" zones."
