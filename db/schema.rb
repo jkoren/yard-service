@@ -10,10 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_23_162851) do
+ActiveRecord::Schema.define(version: 2021_01_23_042642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "number"
+    t.bigint "segment_id", null: false
+    t.string "zip_code"
+    t.index ["segment_id"], name: "index_addresses_on_segment_id"
+  end
+
+  create_table "segments", force: :cascade do |t|
+    t.integer "lowest_num_on_segment"
+    t.integer "highest_num_on_segment"
+    t.bigint "street_id", null: false
+    t.bigint "zone_id", null: false
+    t.index ["street_id"], name: "index_segments_on_street_id"
+    t.index ["zone_id"], name: "index_segments_on_zone_id"
+  end
+
+  create_table "streets", force: :cascade do |t|
+    t.text "name"
+    t.text "notes"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -25,6 +46,14 @@ ActiveRecord::Schema.define(version: 2020_11_23_162851) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "zones", force: :cascade do |t|
+    t.integer "number", null: false
+    t.integer "pickup_day_of_week"
+    t.string "pickup_week"
+    t.string "city"
+    t.string "state"
   end
 
 end
