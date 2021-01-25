@@ -21,7 +21,7 @@ csv_file = File.read(File.join(csv_path, "Segments.csv"))
 csv_segments = CSV.parse(csv_file, headers: true) 
 csv_segments = csv_segments.sort_by { |csv_segments| csv_segments["STREETNAME"] }
 
-city = "Waltham"
+city = "WALTHAM"
 state = "MA"
 
 csv_segments.each { |csv_segment|
@@ -75,6 +75,4 @@ addresses.each { |address|
   previous_address = address
 }    
 
-#binding.pry #look at errors
-#formatted_address_count = addresses.count.to_s.reverse.scan(/.{1,3}/).join(',').reverse
 puts addresses.count+ " addresses processed into "+zones.count+" zones."
