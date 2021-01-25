@@ -1,14 +1,20 @@
 class Address < ApplicationRecord
   belongs_to :segment
-  
-  def self.search(search)
-    # https://stackoverflow.com/questions/22970699/rails-search-query-associated-model
-    binding.pry
-    if search
-      joins(:segment).where('segments.name LIKE ?', "%#{search}%")
-    else
-      find(:all)
-    end
+
+  def name
+    segment.street.name
+  end
+
+  def city
+    segment.zone.city
+  end
+
+  def state
+    segment.zone.state
+  end
+
+  def display_address
+    number + " " + segment.street.name + "  " + segment.zone.city + " " + segment.zone.state
   end
   
 end

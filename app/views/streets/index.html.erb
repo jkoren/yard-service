@@ -1,0 +1,11 @@
+  <div class="grid-x">
+    <div class="medium-offset-3 medium-6"> <br></br>
+      <ul>
+        <% @streets.each do |street| %>
+          <% street.segments.each do |segment|%>
+            <li> <%= street.name %> Zone: <%= segment.zone.number %></li>
+          <% end %>
+        <% end %>
+      </ul> 
+    </div>
+  <div>

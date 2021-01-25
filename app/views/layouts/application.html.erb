@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YardWasteDay</title>
+  <title>Yard Waste Pickup Schedule</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= csrf_meta_tags %>
@@ -9,18 +9,8 @@
 <body>
   
   <nav class="top-bar">
-    <h1><a href="/">YardWasteDay</a></h1>
-
-    <section class="top-bar-section">
-      <ul class="right">
-        <%- if current_user -%>
-          <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
-        <%- else -%>
-          <li><%= link_to 'Sign Up', new_user_registration_path %></li>
-          <li><%= link_to 'Sign In', new_user_session_path %></li>
-        <%- end -%>
-      </ul>
-    </section>
+    <h3><a href="/">Yard Waste Pickup Schedule</a></h3>
+    <img src="https://jkorenstein-production.s3.amazonaws.com/yard-service/waltham-logo.png" alt="Waltham Logo" height="100">
   </nav>
 
   <%- flash.each do |key, value| -%>
@@ -31,6 +21,9 @@
 
   <%= yield %>
 
+  <nav class="top-bar">
+    <h6><a href="/">Coronado Consulting<br>Jeff Korenstein</a></h6>
+  </nav>
   <%= javascript_include_tag 'application' %>
   
   <%- if Rails.env.development? || Rails.env.test? -%> 
