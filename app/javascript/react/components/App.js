@@ -1,7 +1,14 @@
+// App.js
 import React from 'react'
+import { BrowserRouter, Route, Switch } from "react-router-dom"
+import Layout from "./Layout";
 
-export const App = (props) => {
-  return (<h1>Make It So React</h1>)
+const App = (props) => {
+  return (
+    <BrowserRouter>
+      <Route path="/" component={Layout} />
+    </BrowserRouter>
+  )
 }
 
 export default App

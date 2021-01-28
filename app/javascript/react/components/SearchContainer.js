@@ -1,13 +1,13 @@
+//SearchContainer.js
 import React, { useState, useEffect } from "react"
+import StreetTile from "./StreetTile"
 
-import streetTile from "./StreetTile"
-import StreetFormContainer from "./StreetFormContainer"
-
-const StreetsIndexContainer = (props) => {
+const SearchContainer = (props) => {
   const [streets, setStreets] = useState([])
+  const [queryStreet, setQueryStreet] = useState("")
 
-  const getStreets = (streetName) => {
-    fetch('/api/v1/streets')
+  const getStreets = () => {
+    fetch(`/api/v1/streets?name=${queryStreet.street}`)
       .then((response) => {
         if (response.ok) {
           return response
@@ -19,45 +19,61 @@ const StreetsIndexContainer = (props) => {
       .then((responseBody) => {
         setStreets(responseBody)
       })
-  }, [])
-
-  const addNewStreet = (newStreetObject) => {
-    fetch("/api/v1/streets", {
-      method: "POST",
-      body: JSON.stringify(newStreetObject)
-    })
-      .then((response) => {
-        return response.json()
-      })
-      .then((responseBody) => {
-        setStreets([
-          ...streets,
-          responseBody
-        ])
-      })
   }
+
+  const handleChange = (event) => {
+    setQueryStreet({
+      ...queryStreet,
+      [event.currentTarget.name]: event.currentTarget.value
+    })
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    let streets
+    let streetName
+    streets = getStreets(streetName)
+  } 
+
   const streetTiles = streets.map((street) => {
     return (
       <StreetTile
-        key={street.id}
-        street={street}
+      key={street.id}
+      street={street}
       />
-    )
-  })
+      )
+    })
+    
+  let streetSection 
+  streetSection = (streets.length == 0) ? "No Street Found" : streetTiles
 
   return (
     <div className="grid-container">
-      <div className="">
-        <h1 className="jeffTitle">Jeff's Blog!</h1>
+      <br></br>
+        <h2>Yard Waste Pickup Schedule</h2>
 
-        <hr />
+      <div>
+        <div className="text-center">
+          <img src="https://jkorenstein-production.s3.amazonaws.com/yard-service/map.png" height="130"/> 
 
-        <StreetFormContainer addNewStreetFunction={addNewStreet} />
-        
-        {streetTiles}
+          {streetSection}
+  
+          <form onSubmit={handleSubmit} > 
+            <label>Street
+              <input 
+                name="street" 
+                id="street"
+                type="text"
+                onChange={handleChange}
+              />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
       </div>
+
     </div>
   )
 }
 
-export default StreetsIndexContainer
+export default SearchContainer
