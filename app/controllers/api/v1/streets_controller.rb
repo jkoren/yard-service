@@ -1,9 +1,8 @@
 class Api::V1::StreetsController < ApplicationController
 
   def index
-    # search_term = params["street"].upcase
-    # @streets = Street.where('name like ?', "%"+ search_term + "%")
-    streets = Street.all
+    search_term = params["name"].upcase
+    streets = Street.where('name like ?', "%"+ search_term + "%")
     render json: streets
   end
 
