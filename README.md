@@ -1,7 +1,14 @@
 
-## YARD SERVICE
+# YARD SERVICE
 
 Yard Service is a responsive web application to help residents understand the collection service provided by their city or town, adjusting for seasons and holidays, simplifying the combination of maps and calendars provided previously.
+
+[Run the deployed application](https://yard-service.herokuapp.com/)
+
+## Example Addresses for Demo Scenarios
+- "Abbott" - a simple lookup
+- "Grove" - there are 3 streets with Grove in the name
+- "Trapelo" - has more than one pick up date (it goes across multiple zones)
 
 # ![city-calendar](app/assets/images/calendar.png)
 # ![city-map](app/assets/images/map.png)

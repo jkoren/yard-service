@@ -21,6 +21,15 @@ csv_file = File.read(File.join(csv_path, "Segments.csv"))
 csv_segments = CSV.parse(csv_file, headers: true) 
 csv_segments = csv_segments.sort_by { |csv_segments| csv_segments["STREETNAME"] }
 
+csv_file = File.read(File.join(csv_path, "Zones.csv"))
+csv_zones = CSV.parse(csv_file, headers: true) 
+
+csv_file = File.read(File.join(csv_path, "Holidays.csv"))
+csv_holidays = CSV.parse(csv_file, headers: true) 
+
+csv_file = File.read(File.join(csv_path, "Year.csv"))
+csv_year = CSV.parse(csv_file, headers: true) 
+
 city = "WALTHAM"
 state = "MA"
 
@@ -36,6 +45,17 @@ csv_segments.each { |csv_segment|
   segment.street = street
   segment.zone = zone
   segment.save
+}
+
+zones.each {|zone|
+  csv_zones.each { |csv_zone|
+    if csv_zone["zone_number"].to_i == zone.number
+      puts("populating zone "+ zone.number.to_s + "...")
+      zone.pickup_week = csv_zone["pickup_week"]
+      zone.pickup_day_of_week = csv_zone["pickup_day_of_week"]
+      zone.save
+    end
+  }
 }
 
 puts("creating addresses...")
@@ -65,14 +85,14 @@ addresses.each { |address|
     end
     if segment == nil 
       puts "error - segment not found"
-      binding.pry
       errors.push("error - segment not found " + address["ADDRESS"])
     else
       new_address.segment = segment 
-      new_address.save
+      if new_address.segment.name < "K" # heroku has a limit of 10,000 records on lowest tier
+        new_address.save
+      end
     end
   end
   previous_address = address
 }    
-
-puts addresses.count+ " addresses processed into "+zones.count+" zones."
+puts addresses.count.to_s+ " addresses processed into "+zones.count.to_s+" zones."
