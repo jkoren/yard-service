@@ -1,0 +1,16 @@
+zone_number,pickup_day_of_week,pickup_week
+1,Wed,A
+2,Thu,A
+3,No,
+4,Wed,B
+5,Tue,A
+6,No,
+7,Thu,B
+8,Fri,A
+9,Tue,B
+10,Mon,A
+11,No,
+12,Fri,B
+13,Mon,B
+14,Weds,B
+15,Tues,B
