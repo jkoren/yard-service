@@ -1,4 +1,4 @@
-puts("erasing zones, segments, streets & addresses...")
+puts("erasing zones, segments, streets, calendar & addresses...")
 zones = Zone.all
 zones.destroy_all
 
@@ -11,9 +11,14 @@ streets.destroy_all
 addresses = Address.all
 addresses.destroy_all
 
-puts("creating segments, streets & zones...")
+days = Day.all
+days.destroy_all
+
 csv_path = File.join(Rails.root, 'db', 'seed')
 # https://stackoverflow.com/questions/36350321/errnoenoent-no-such-file-or-directory-rb-sysopen
+
+
+puts("creating segments, streets & zones...")
 
 # create segments table from CSV (each is a segment of a street)
 # create zones & streets along the way
@@ -24,11 +29,6 @@ csv_segments = csv_segments.sort_by { |csv_segments| csv_segments["STREETNAME"] 
 csv_file = File.read(File.join(csv_path, "Zones.csv"))
 csv_zones = CSV.parse(csv_file, headers: true) 
 
-csv_file = File.read(File.join(csv_path, "Holidays.csv"))
-csv_holidays = CSV.parse(csv_file, headers: true) 
-
-csv_file = File.read(File.join(csv_path, "Year.csv"))
-csv_year = CSV.parse(csv_file, headers: true) 
 
 city = "WALTHAM"
 state = "MA"
@@ -57,6 +57,40 @@ zones.each {|zone|
     end
   }
 }
+
+puts("creating calendar...")
+csv_file = File.read(File.join(csv_path, "Holidays.csv"))
+csv_holidays = CSV.parse(csv_file, headers: true) 
+
+csv_file = File.read(File.join(csv_path, "Year.csv"))
+csv_year = CSV.parse(csv_file, headers: true) 
+
+sunday_1st_wk =  Date.parse(csv_year["sunday_1st_wk"].first)
+sunday_last_wk =  Date.parse(csv_year["sunday_last_wk"].first)
+saturday_last_wk = sunday_last_wk + 6
+
+holidays = csv_holidays["holidays"].map { |holiday| Date.parse(holiday) }
+
+pickup_week = "A"
+date = sunday_1st_wk
+days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" 
+]
+while date < saturday_last_wk
+  pickup_days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+  days_of_week.each { |day_of_week| 
+    day = Day.new(date: date)
+    if !holidays.include?(date)
+      pickup_day_of_week = pickup_days_of_week.shift
+      zone = Zone.find_by(pickup_day_of_week: pickup_day_of_week, pickup_week: pickup_week)
+      if zone
+        day.zone = zone
+      end
+    end
+    day.save
+    date += 1
+  }
+  pickup_week = (pickup_week == "A" ? "B" : "A")
+end
 
 puts("creating addresses...")
 errors = []

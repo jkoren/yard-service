@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_29_221746) do
+ActiveRecord::Schema.define(version: 2021_01_30_144018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(version: 2021_01_29_221746) do
     t.bigint "segment_id", null: false
     t.string "zip_code"
     t.index ["segment_id"], name: "index_addresses_on_segment_id"
+  end
+
+  create_table "days", force: :cascade do |t|
+    t.date "date"
+    t.string "pickup_day_of_week"
+    t.string "pickup_week"
+    t.bigint "zone_id"
+    t.index ["zone_id"], name: "index_days_on_zone_id"
   end
 
   create_table "segments", force: :cascade do |t|
