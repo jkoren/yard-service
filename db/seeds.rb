@@ -84,6 +84,9 @@ while date < saturday_last_wk
       zone = Zone.find_by(pickup_day_of_week: pickup_day_of_week, pickup_week: pickup_week)
       if zone
         day.zone = zone
+        # don't need below, and actually would be confusing, probably should remove from day table
+        # day.pickup_day_of_week = pickup_day_of_week
+        # day.pickup_week = pickup_week
       end
     end
     day.save

@@ -1,14 +1,18 @@
 //SearchContainer.js
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import StreetTile from "./StreetTile"
-import AddressIndex from "./AddressIndex"
+import SegmentTile from "./SegmentTile"
 
 const SearchContainer = (props) => {
   const [streets, setStreets] = useState([])
+  const [selectedStreet, setSelectedStreet] = useState({})
+  const [selectedSegment, setSelectedSegment] = useState({})
+
   const [queryStreet, setQueryStreet] = useState("")
+  const [queryAddressNumber, setQueryAddressNumber] = useState("")
   const [searched, setSearched] = useState(false)
 
-  const getStreets = () => {
+  const getStreetsByName = () => {
     fetch(`/api/v1/streets?name=${queryStreet.street}`)
       .then((response) => {
         if (response.ok) {
@@ -23,65 +27,68 @@ const SearchContainer = (props) => {
       })
   }
 
-  const handleChange = (event) => {
+  const handleStreetChange = (event) => {
+    setSearched(false)
     setQueryStreet({
       ...queryStreet,
       [event.currentTarget.name]: event.currentTarget.value
     })
   }
 
+  const handleAddressNumberChange = (event) => {
+    setQueryAddressNumber({
+      ...queryAddressNumber,
+      [event.currentTarget.name]: event.currentTarget.value
+    })
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    getStreets()
     setSearched(true)
+    getStreetsByName()
+    if (streets.length == 1 && streets[0].segments.length == 1) {
+      setSelectedSegment(streets[0].segments[0])
+    }
   } 
 
-  const streetTiles = streets.map((street) => {
+  const handleStreetNameClick = (event) => {
+    const chosenStreet = streets.filter((street) => {
+      return street.name === event.target.innerHTML
+    })
+    setSelectedStreet(chosenStreet[0])
+    if (chosenStreet[0].segments.length == 1) {
+      setSelectedSegment(chosenStreet[0].segments[0])
+    }
+  }
+  
+  const streetChoices = streets.map((street) => {
     return (
       <StreetTile
-      key={street.id}
-      street={street}
+        key={street.id}
+        street={street}
+        handleStreetNameClick={handleStreetNameClick}
       />
       )
     })
-    
-  let streetSection 
-  let addressTiles
-  addressTiles = ""
-  if (searched == true) {
-    if (streets.length == 0) {
-      streetSection = <div>No Street Found: {queryStreet.street}</div>
-    } else if (streets.length == 1) {
-      let street
-      street = streets[0]
-      if (street.segments.length == 1) {
-        // if only one street matches search, and it has only one segment (ABBOTT)
-        let segment 
-        segment = street.segments[0]
 
-        // if I want to show all the addresses, not necessary
-        // addressTiles = 
-        //   <AddressIndex
-        //   key="1",
-        //   addresses={segment.addresses}
-        //   />
+  const noStreetsFound = (searched && streets.length == 0)
 
-        streetSection = 
-          <div> 
-            <hr></hr>
-            {street.name} Zone:{segment.zone_number}<br></br>
-            {segment.zone_pickup_week}/{segment.zone_pickup_day_of_week}
-            <hr></hr>
-          </div>
-      } else if (streets[0].segments.length > 1) {
-        streetSection = <div>{street.name} is in multiple zones.  What is address number?</div>
-        // if only one street matches search, and it has more than one segment (TRAPELO)
-      }
-    } else if (streets.length > 1) {
-      // multiple street match search term (ELM or GROVE)
-      streetSection = streetTiles
-    }
-  }
+  // if only one street matches search, and it only has one segment (ABBOTT)
+  const oneSegmentFound = (searched && streets.length == 1 && streets[0].segments.length == 1)
+  
+  // HOW TO setSelectedSegment if oneSegmentFound?  a setSelected goes into infinite loop
+
+  // if only one street matches search, but that street has more than one segment(TRAPELO)
+  const multipleSegmentsFound = (searched && streets.length == 1 && streets[0].segments.length > 1)  
+  
+  // if multiple streets match search (GROVE)
+  const multipleStreetsFound = (streets.length > 1) 
+
+  const streetSelected = !(selectedStreet.name === undefined)
+  const segmentSelected = !(selectedSegment.zone_number === undefined)
+
+  console.log("street selected:",streetSelected)
+  console.log("segment selected:",segmentSelected)
 
   return (
     <div className="grid-container">
@@ -91,20 +98,44 @@ const SearchContainer = (props) => {
       <div>
         <div className="text-center">
           <img src="https://jkorenstein-production.s3.amazonaws.com/yard-service/map.png" height="130"/> 
-
-          {streetSection}
+          {searched && streets.length == 0}
           <br></br>
-          {addressTiles}
-  
+
+          {noStreetsFound &&
+            <div> No Street Found: {queryStreet.street}</div>
+          }
+
+          {multipleStreetsFound && streetChoices}
+
+          {segmentSelected && 
+            <SegmentTile 
+              id={streets[0].segments[0].id}
+              segment={streets[0].segments[0]}
+            />}
+
           <form onSubmit={handleSubmit} > 
+
             <label>Street
               <input 
                 name="street" 
                 id="street"
-                type="text"
-                onChange={handleChange}
+                type="text" required
+                onChange={handleStreetChange}
               />
             </label>
+
+            {multipleSegmentsFound && 
+            <div> {streets[0].name} is in multiple zones.
+              <label> Address Number
+                <input 
+                  name="addressNumber" 
+                  id="addressNumber"
+                  type="text" required
+                  onChange={handleAddressNumberChange}
+                  />
+              </label>
+            </div>}
+
             <input type="submit" value="Submit" />
           </form>
         </div>
