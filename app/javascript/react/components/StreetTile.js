@@ -1,11 +1,12 @@
 // StreetTile.js
 import React from "react"
-import { Link } from "react-router-dom";
 
 const StreetTile = (props) => {
   return (
     <div>
-      {props.street.name}
+      <a id={props.street.id} onClick={props.handleStreetNameClick}>
+        {props.street.name}
+      </a>
     </div>
   )
 }
