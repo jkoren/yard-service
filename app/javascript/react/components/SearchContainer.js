@@ -24,11 +24,36 @@ const SearchContainer = (props) => {
       .then((response) => response.json())
       .then((responseBody) => {
         setStreets(responseBody)
+        return(responseBody)
+      })
+      .then((streets) => {
+        console.log("fetching streets")
+        console.log(streets)
+        if (streets.length === 1) {
+          console.log("one street!")
+          setSelectedStreet(streets[0])
+          return(streets[0])
+        } else {
+          console.log("multiple streets!")
+          setSelectedStreet({})
+          setSelectedSegment({})
+          return(null)
+        }
+      })
+      .then((street) => {
+        console.log("evaluating street")
+        console.log(street)
+        if (street && street.segments.length === 1) {
+          console.log("one segment!")
+          setSelectedSegment(street.segments[0])
+        }
       })
   }
 
   const handleStreetChange = (event) => {
     setSearched(false)
+    setSelectedStreet({})
+    setSelectedSegment({})
     setQueryStreet({
       ...queryStreet,
       [event.currentTarget.name]: event.currentTarget.value
@@ -44,6 +69,8 @@ const SearchContainer = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    setSelectedStreet({})
+    setSelectedSegment({})
     setSearched(true)
     getStreetsByName()
     if (streets.length == 1 && streets[0].segments.length == 1) {
@@ -73,11 +100,6 @@ const SearchContainer = (props) => {
 
   const noStreetsFound = (searched && streets.length == 0)
 
-  // if only one street matches search, and it only has one segment (ABBOTT)
-  const oneSegmentFound = (searched && streets.length == 1 && streets[0].segments.length == 1)
-  
-  // HOW TO setSelectedSegment if oneSegmentFound?  a setSelected goes into infinite loop
-
   // if only one street matches search, but that street has more than one segment(TRAPELO)
   const multipleSegmentsFound = (searched && streets.length == 1 && streets[0].segments.length > 1)  
   
@@ -88,7 +110,9 @@ const SearchContainer = (props) => {
   const segmentSelected = !(selectedSegment.zone_number === undefined)
 
   console.log("street selected:",streetSelected)
+  console.log(selectedStreet)
   console.log("segment selected:",segmentSelected)
+  console.log(selectedSegment)
 
   return (
     <div className="grid-container">
@@ -109,8 +133,9 @@ const SearchContainer = (props) => {
 
           {segmentSelected && 
             <SegmentTile 
-              id={streets[0].segments[0].id}
-              segment={streets[0].segments[0]}
+              id={selectedSegment.id}
+              street={selectedStreet}
+              segment={selectedSegment}
             />}
 
           <form onSubmit={handleSubmit} > 

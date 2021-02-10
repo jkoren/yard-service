@@ -1,7 +1,6 @@
 //SegmentTile.js
 import React from "react"
 import DayTile from "./DayTile"
-// import './DayTile.css'
 
 const SegmentTile = (props) => {
   var days
@@ -17,8 +16,7 @@ const SegmentTile = (props) => {
 
   return ( 
     <div> 
-      Zone:{props.segment.zone_number}<br></br>
-      {/* <div className="grid-x  callout"> */}
+      {props.street.name} - Zone:{props.segment.zone_number}<br></br>
       <div className="grid-x small-up-2 medium-up-4 callout">
         {days}
       </div>
