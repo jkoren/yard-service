@@ -95,41 +95,41 @@ while date < saturday_last_wk
   pickup_week = (pickup_week == "A" ? "B" : "A")
 end
 
-puts("creating addresses...")
-errors = []
-csv_file = File.read(File.join(csv_path, "Addresses.csv"))
-addresses = CSV.parse(csv_file, headers: true) 
-addresses = addresses.sort_by { |address| [address["STREETNAME"],address["ADDR_NUM"]] }
-previous_address = addresses.shift()
-puts "processing "+previous_address["ADDRESS"]
-addresses.each { |address| 
-  # need to eliminate duplicate addresses (when address is duplicated - eg 425 Waverley Oaks Road)
-  if address["ADDRESS"] != previous_address["ADDRESS"]
-    puts "processing "+address["ADDRESS"]
-    new_address = Address.new
-    new_address.number = address["ADDR_NUM"].to_i
-    new_address.zip_code = address["ZIPCODE"]
-    street = Street.find_by(name: address["STREETNAME"])
-    if street.segments.count == 1
-      segment = street.segments.first
-    else
-      street.segments.each { |the_segment|
-        if new_address.number.to_i >= the_segment.lowest_num_on_segment && 
-          new_address.number.to_i <= the_segment.highest_num_on_segment 
-          segment = the_segment
-        end
-      }
-    end
-    if segment == nil 
-      puts "error - segment not found"
-      errors.push("error - segment not found " + address["ADDRESS"])
-    else
-      new_address.segment = segment 
-      if new_address.segment.name < "K" # heroku has a limit of 10,000 records on lowest tier
-        new_address.save
-      end
-    end
-  end
-  previous_address = address
-}    
-puts addresses.count.to_s+ " addresses processed into "+zones.count.to_s+" zones."
+# puts("creating addresses...")
+# errors = []
+# csv_file = File.read(File.join(csv_path, "Addresses.csv"))
+# addresses = CSV.parse(csv_file, headers: true) 
+# addresses = addresses.sort_by { |address| [address["STREETNAME"],address["ADDR_NUM"]] }
+# previous_address = addresses.shift()
+# puts "processing "+previous_address["ADDRESS"]
+# addresses.each { |address| 
+#   # need to eliminate duplicate addresses (when address is duplicated - eg 425 Waverley Oaks Road)
+#   if address["ADDRESS"] != previous_address["ADDRESS"]
+#     puts "processing "+address["ADDRESS"]
+#     new_address = Address.new
+#     new_address.number = address["ADDR_NUM"].to_i
+#     new_address.zip_code = address["ZIPCODE"]
+#     street = Street.find_by(name: address["STREETNAME"])
+#     if street.segments.count == 1
+#       segment = street.segments.first
+#     else
+#       street.segments.each { |the_segment|
+#         if new_address.number.to_i >= the_segment.lowest_num_on_segment && 
+#           new_address.number.to_i <= the_segment.highest_num_on_segment 
+#           segment = the_segment
+#         end
+#       }
+#     end
+#     if segment == nil 
+#       puts "error - segment not found"
+#       errors.push("error - segment not found " + address["ADDRESS"])
+#     else
+#       new_address.segment = segment 
+#       if new_address.segment.name < "J" # heroku has a limit of 10,000 records on lowest tier
+#         new_address.save
+#       end
+#     end
+#   end
+#   previous_address = address
+# }    
+# puts addresses.count.to_s+ " addresses processed into "+zones.count.to_s+" zones."
