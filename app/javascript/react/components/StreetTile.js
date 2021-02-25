@@ -1,4 +1,4 @@
-// StreetTile.js
+// StreetITile.js
 import React from "react"
 
 const StreetTile = (props) => {
