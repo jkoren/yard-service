@@ -1,12 +1,10 @@
 //SearchContainer.js
 import React, { useState } from "react"
-import StreetTile from "./StreetTile"
-import SegmentTile from "./SegmentTile"
+import StreetTile from "./StreetIndexTile"
 import SegmentShowTile from "./SegmentShowTile"
 
 const SearchContainer = (props) => {
   const [streets, setStreets] = useState([])
-  const [segments, setSegments] = useState([])
   const [selectedStreet, setSelectedStreet] = useState({})
   const [selectedSegment, setSelectedSegment] = useState({})
 
@@ -24,18 +22,30 @@ const SearchContainer = (props) => {
         }
       })
       .then((response) => response.json())
+      .then((responseBody) => {
+        setStreets(responseBody)
+        return(responseBody)
+      })
       .then((streets) => {
-        setStreets(streets)
+        console.log("fetching streets")
+        console.log(streets)
         if (streets.length === 1) {
+          console.log("one street!")
           setSelectedStreet(streets[0])
-          if (streets[0].segments.length === 1) {
-            setSelectedSegment(streets[0].segments[0])
-          } else {
-            setSegments(streets[0].segments)
-            setSelectedSegment({})
-          }
+          return(streets[0])
         } else {
+          console.log("multiple streets!")
           setSelectedStreet({})
+          setSelectedSegment({})
+          return(null)
+        }
+      })
+      .then((street) => {
+        console.log("evaluating street")
+        console.log(street)
+        if (street && street.segments.length === 1) {
+          console.log("one segment!")
+          setSelectedSegment(street.segments[0])
         }
       })
   }
@@ -63,6 +73,9 @@ const SearchContainer = (props) => {
     setSelectedSegment({})
     getStreetsByName()
     setSearched(true)
+    // if (streets.length == 1 && streets[0].segments.length == 1) {
+    //   setSelectedSegment(streets[0].segments[0])
+    // }
   } 
 
   const handleStreetNameClick = (event) => {
@@ -77,15 +90,9 @@ const SearchContainer = (props) => {
   }
 
   const handleSegmentNumberClick = (event) => {
-    const chosenSegment = segments.filter((segment) => {
-      console.log("segment.zone_number")
-      console.log("Zone:"+segment.zone_number)
-      console.log("event.target.innerHTML")
-      console.log(event.target.innerHTML)
-      return event.target.innerHTML.startsWith("Zone:"+segment.zone_number)
+    const chosenSegment = streets.segments.filter((segment) => {
+      return segment.number === event.target.innerHTML
     })
-    console.log("chosen segment")
-    console.log(chosenSegment)
     setSelectedSegment(chosenSegment[0])
   }
   
@@ -99,15 +106,15 @@ const SearchContainer = (props) => {
       )
     })
   
-  const segmentChoices = segments.map((segment) => {
-    return (
-      <SegmentTile
-        key={segment.id}
-        segment={segment}
-        handleSegmentNumberClick={handleSegmentNumberClick}
-      />
-      )
-    })
+  // const segmentChoices = selectedStreet.segments.map((street) => {
+  //   return (
+  //     <SegmentTile
+  //       key={segment.id}
+  //       segment={segment}
+  //       handleSegmentNumberClick={handleSegmentNumberClick}
+  //     />
+  //     )
+  //   })
 
   const noStreetsFound = (searched && streets.length == 0)
 
@@ -119,6 +126,11 @@ const SearchContainer = (props) => {
 
   const streetSelected = !(selectedStreet.name === undefined)
   const segmentSelected = !(selectedSegment.zone_number === undefined)
+
+  console.log("street selected:",streetSelected)
+  console.log(selectedStreet)
+  console.log("segment selected:",segmentSelected)
+  console.log(selectedSegment)
 
   return (
     <div className="grid-container">
@@ -137,7 +149,7 @@ const SearchContainer = (props) => {
 
           {multipleStreetsFound && streetChoices}
 
-          {multipleSegmentsFound && segmentChoices}
+          {/* {multipleSegmentsFound && segmentChoices} */}
 
           {segmentSelected && 
             <SegmentShowTile 
@@ -157,7 +169,7 @@ const SearchContainer = (props) => {
               />
             </label>
 
-{/* 
+
             {multipleSegmentsFound && 
             <div> {streets[0].name} is in multiple zones.
               <label> Address Number
@@ -168,7 +180,7 @@ const SearchContainer = (props) => {
                   onChange={handleAddressNumberChange}
                   />
               </label>
-            </div>} */}
+            </div>}
 
             <input type="submit" value="Submit" />
           </form>
