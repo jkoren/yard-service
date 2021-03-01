@@ -6,9 +6,6 @@ const DayTile = (props) => {
     <div className="cell"> 
       {thedate}
     </div>
-    // <li className="cell"> 
-    //   {thedate}
-    // </li>
   )
 }
 

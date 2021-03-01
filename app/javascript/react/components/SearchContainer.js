@@ -50,12 +50,12 @@ const SearchContainer = (props) => {
     })
   }
 
-  const handleAddressNumberChange = (event) => {
-    setQueryAddressNumber({
-      ...queryAddressNumber,
-      [event.currentTarget.name]: event.currentTarget.value
-    })
-  }
+  // const handleAddressNumberChange = (event) => {
+  //   setQueryAddressNumber({
+  //     ...queryAddressNumber,
+  //     [event.currentTarget.name]: event.currentTarget.value
+  //   })
+  // }
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -117,7 +117,7 @@ const SearchContainer = (props) => {
   // (GROVE)
   const multipleStreetsFound = (streets.length > 1) 
 
-  const streetSelected = !(selectedStreet.name === undefined)
+  // const streetSelected = !(selectedStreet.name === undefined)
   const segmentSelected = !(selectedSegment.zone_number === undefined)
 
   return (
@@ -156,19 +156,6 @@ const SearchContainer = (props) => {
                 onChange={handleStreetChange}
               />
             </label>
-
-{/* 
-            {multipleSegmentsFound && 
-            <div> {streets[0].name} is in multiple zones.
-              <label> Address Number
-                <input 
-                  name="addressNumber" 
-                  id="addressNumber"
-                  type="text" required
-                  onChange={handleAddressNumberChange}
-                  />
-              </label>
-            </div>} */}
 
             <input type="submit" value="Submit" />
           </form>
