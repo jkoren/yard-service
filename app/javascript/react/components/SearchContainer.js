@@ -50,13 +50,6 @@ const SearchContainer = (props) => {
     })
   }
 
-  // const handleAddressNumberChange = (event) => {
-  //   setQueryAddressNumber({
-  //     ...queryAddressNumber,
-  //     [event.currentTarget.name]: event.currentTarget.value
-  //   })
-  // }
-
   const handleSubmit = (event) => {
     event.preventDefault()
     setSelectedStreet({})
@@ -73,19 +66,16 @@ const SearchContainer = (props) => {
     // Abbott
     if (chosenStreet[0].segments.length == 1) {
       setSelectedSegment(chosenStreet[0].segments[0])
+    } else {
+      setSelectedSegment({})
     }
   }
 
   const handleSegmentNumberClick = (event) => {
     const chosenSegment = segments.filter((segment) => {
-      console.log("segment.zone_number")
-      console.log("Zone:"+segment.zone_number)
-      console.log("event.target.innerHTML")
-      console.log(event.target.innerHTML)
+
       return event.target.innerHTML.startsWith("Zone:"+segment.zone_number)
     })
-    console.log("chosen segment")
-    console.log(chosenSegment)
     setSelectedSegment(chosenSegment[0])
   }
   
