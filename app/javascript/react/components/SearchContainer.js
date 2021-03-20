@@ -11,7 +11,6 @@ const SearchContainer = (props) => {
   const [selectedSegment, setSelectedSegment] = useState({})
 
   const [queryStreet, setQueryStreet] = useState("")
-  const [queryAddressNumber, setQueryAddressNumber] = useState("")
   const [searched, setSearched] = useState(false)
 
   const getStreetsByName = () => {
@@ -66,8 +65,13 @@ const SearchContainer = (props) => {
     // Abbott
     if (chosenStreet[0].segments.length == 1) {
       setSelectedSegment(chosenStreet[0].segments[0])
-    } else {
+    } else if (chosenStreet[0].segments.length == 0) {
       setSelectedSegment({})
+    } else if (chosenStreet[0].segments.length > 1) {
+      // if the chosen street has more than one segment, e.g. Elm
+      // what do we do?
+      console.log("more than one segment - what do we do?")
+      setSelectedSegment(chosenStreet[0].segments[0])
     }
   }
 
@@ -98,17 +102,32 @@ const SearchContainer = (props) => {
       />
       )
     })
+    
+  const numSegmentsInSelectedStreet = (selectedStreet  && selectedStreet.segments && selectedStreet.segments.length)
+  const multipleSegmentsInSelectedStreet = numSegmentsInSelectedStreet > 1
+
+  const multipleSegmentsInSelectedStreetChoices = selectedStreet && selectedStreet.segments && selectedStreet.segments.map((segment) => {
+    return (
+      <SegmentTile
+        key={segment.id}
+        segment={segment}
+        handleSegmentNumberClick={handleSegmentNumberClick}
+      />
+      )
+    })
 
   const noStreetsFound = (searched && streets.length == 0)
 
-  // (TRAPELO)
-  const multipleSegmentsFound = (searched && streets.length == 1 && streets[0].segments.length > 1)  
+  // (TRAPELO or ELM)
+  const multipleSegmentsFound = (searched && (streets.length == 1 && streets[0].segments.length > 1))  
   
   // (GROVE)
   const multipleStreetsFound = (streets.length > 1) 
 
   // const streetSelected = !(selectedStreet.name === undefined)
   const segmentSelected = !(selectedSegment.zone_number === undefined)
+
+  const chooseZone = "Choose Zone"
 
   return (
     <div className="grid-container">
@@ -128,6 +147,9 @@ const SearchContainer = (props) => {
           {multipleStreetsFound && streetChoices}
 
           {multipleSegmentsFound && segmentChoices}
+
+          {multipleSegmentsInSelectedStreet && !multipleSegmentsFound && chooseZone}
+          {multipleSegmentsInSelectedStreet && !multipleSegmentsFound && multipleSegmentsInSelectedStreetChoices}
 
           {segmentSelected && 
             <SegmentShowTile 
