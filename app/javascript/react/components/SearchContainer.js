@@ -69,15 +69,20 @@ const SearchContainer = (props) => {
       setSelectedSegment({})
     } else if (chosenStreet[0].segments.length > 1) {
       // if the chosen street has more than one segment, e.g. Elm
-      // what do we do?
-      console.log("more than one segment - what do we do?")
       setSelectedSegment(chosenStreet[0].segments[0])
     }
   }
 
   const handleSegmentNumberClick = (event) => {
     const chosenSegment = segments.filter((segment) => {
+      return event.target.innerHTML.startsWith("Zone:"+segment.zone_number)
+    })
+    setSelectedSegment(chosenSegment[0])
+  }
 
+  const handleSegmentNumberClick2 = (event) => {
+    // for when a chosen street has multiple segments - eg "Elm"
+    const chosenSegment = selectedStreet.segments.filter((segment) => {
       return event.target.innerHTML.startsWith("Zone:"+segment.zone_number)
     })
     setSelectedSegment(chosenSegment[0])
@@ -111,7 +116,7 @@ const SearchContainer = (props) => {
       <SegmentTile
         key={segment.id}
         segment={segment}
-        handleSegmentNumberClick={handleSegmentNumberClick}
+        handleSegmentNumberClick={handleSegmentNumberClick2}
       />
       )
     })
