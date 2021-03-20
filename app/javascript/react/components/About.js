@@ -13,6 +13,8 @@ const About = () => {
       <br></br>
       Also works in a mobile browser.
       <br></br>
+      Yard Service provides information on over 20,000 address and 742 street segments.
+      <br></br>
       <img src="https://jkorenstein-production.s3.amazonaws.com/yard-service/Yard-Service-Mobile.png" height="130"/> 
 
     </div>
