@@ -17,6 +17,7 @@ const About = () => {
       <br></br>
       <img src="https://jkorenstein-production.s3.amazonaws.com/yard-service/Yard-Service-Mobile.png" height="130"/> 
 
+      <a href="/" class="button">Search</a>
     </div>
   )
 }
